@@ -1,0 +1,103 @@
+<html>
+	<head>
+		<title>Take picture</title>
+		<style>
+		td {
+			text-align: center;
+		}
+		</style>
+		<script type="text/javascript"	charset="utf-8" src="cordova.js"></script>
+		<script type="text/javascript"	charset="utf-8" src="barcodescanner.js"></script>
+		<script>
+		
+			document.addEventListener("deviceready", init, false);
+			function init() {
+			}	
+			
+			document.addEventListener("offline", onOffline, false);
+			function onOffline() {
+				alert("You are offline", "Error");
+			}
+			
+			function TakePhoto() {
+				if (!navigator.camera) {
+					alert("Camera API not supported", "Error");
+					return;
+				}
+				navigator.camera.getPicture(SucessCallback, ErrorCallback);
+			}
+			
+			function MyLocation() {
+				navigator.geolocation.getCurrentPosition(
+				function(position) {
+					alert(
+					"Latitude:" + position.coords.latitude + "\n" +
+					"Longitude:" + position.coords.longitude + "\n" +
+					"Altitude:" + position.coords.altitude + "\n" +
+					"Accuracy:" + position.coords.accuracy + "\n" +
+					"Altitude Accuracy:" + position.coords.altitudeaccuracy + "\n" +
+					"Heading:" + position.coords.heading + "\n" +
+					"Speed:" + position.coords.speed + "\n" +
+					"Timestamp:" + position.coords.timestamp + "\n");
+					// $('.location', this.el).html(position.coords.latitude + ',' +position.coords.longitude);
+				},
+				ErrorCallback);
+			}	
+ 
+			function checkConnection() {
+				var networkState = navigator.connection.type;
+
+				var states = {};
+				states[Connection.UNKNOWN]  = 'Unknown connection';
+				states[Connection.ETHERNET] = 'Ethernet connection';
+				states[Connection.WIFI]     = 'WiFi connection';
+				states[Connection.CELL_2G]  = 'Cell 2G connection';
+				states[Connection.CELL_3G]  = 'Cell 3G connection';
+				states[Connection.CELL_4G]  = 'Cell 4G connection';
+				states[Connection.CELL]     = 'Cell generic connection';
+				states[Connection.NONE]     = 'No network connection';
+
+				alert('Connection type: ' + states[networkState]);
+			}
+			
+			function startscan() {	
+				cordova.plugins.barcodeScanner.scan(
+					function (result) {
+						var s = "Result: " + result.text + "<br/>" +
+						"Format: " + result.format + "<br/>" +
+						"Cancelled: " + result.cancelled;
+						resultDiv.innerHTML = s;
+					}, 
+					function (error) {
+						alert("Scanning failed: " + error);
+					}
+				)
+			}
+			
+			function SucessCallback(result) {
+				alert("Picture Taken");
+			}
+			function ErrorCallback(error) {
+				alert("Error code:" + error.code + "\n" +
+				      "Message:" + error.message + "\n");
+			}
+		</script>
+	</head>
+	<body>
+		<table style="width:100%" >
+			<caption><h1>Device Features</h1></caption>
+			<tr>
+				<td><button onclick="TakePhoto()"><img src="img/camera.jpg" width = 100px height = 100px /></button></td>
+				<td><button onclick="MyLocation()"><img src="img/location.png" width = 100px height = 100px /></button></td>
+			</tr>
+			<tr>
+				<td><button onclick="checkConnection()"><img src="img/network.jpg" width = 100px height = 100px/></button></td>
+				<td><button onclick="startscan()"><img src="img/scanner.png" width = 100px height = 100px/></button></td>
+			</tr>	
+			<tr>	
+				<td><button onclick="checkConnection()"><img src="img/print.jpg" width = 100px height = 100px/></button></td>
+				<td><button onclick="MyLocation()"><img src="img/SAP.jpg" width = 100px height = 100px/></button></td>				
+			</tr>			
+		</table>
+	</body>
+</html>
