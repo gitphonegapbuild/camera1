@@ -60,6 +60,7 @@
 				alert('Connection type: ' + states[networkState]);
 			}
 			
+			var resultDiv;
 			function startscan() {	
 				cordova.plugins.barcodeScanner.scan(
 					function (result) {
